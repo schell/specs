@@ -626,3 +626,20 @@ fn maintain_entity_deletion() {
     world.maintain();
     check.run_now(&world);
 }
+
+#[test]
+fn can_get_contains() {
+    struct AnySys;
+
+    impl<'a> System<'a> for AnySys {
+        type SystemData = Entities<'a>;
+
+        fn run(&mut self, _: Self::SystemData) {}
+    }
+
+    let builder = DispatcherBuilder::default();
+    assert!(!builder.contains("anything"));
+
+    let builder = builder.with(AnySys, "anything", &[]);
+    assert!(builder.contains("anything"));
+}
